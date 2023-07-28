@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#  Displays 'Best School' ten times using while loop and displays
+#+ 'Hi' on newline after the 9th iteration
+n=10
+while [ $n -gt 0 ]; do
+    echo "Best School"
+    if [ $n == 2 ]; then
+        echo "Hi"
+    fi
+    ((n--))
+done
