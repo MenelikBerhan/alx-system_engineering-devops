@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# manages `manage_my_process`.
+if [ $# != 1 ]; then
+    echo "Usage: manage_my_process {start|stop|restart}"
+    exit 1
+fi
+command="$1"
+if [ "$command" == "start" ]; then
+    bash "./manage_my_process" &
+    pgrep -fn manage_my_process | sudo tee "/var/run/my_process.pid" > /dev/null
+    echo "manage_my_process started"
+    exit 0
+elif [ "$command" == "stop" ]; then
+    sudo rm /var/run/my_process.pid
+    echo "manage_my_process stopped"
+    pkill -fo manage_my_process
+    exit 0
+elif [ "$command" == "restart" ]; then
+    pkill -fo manage_my_process
+    sudo rm /var/run/my_process.pid
+    bash "./manage_my_process" &
+    pgrep -fn manage_my_process | sudo tee "/var/run/my_process.pid" > /dev/null
+    echo "manage_my_process restarted"
+    exit 0
+else
+    echo "Usage: manage_my_process {start|stop|restart}"
+    exit 1
+fi
