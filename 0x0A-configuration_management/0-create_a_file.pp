@@ -1,3 +1,4 @@
+# creates a file called school in /etc
 file { 'school' :
     ensure  => file,
     path    => '/etc/school',
