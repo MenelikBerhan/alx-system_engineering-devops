@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
 # Configures Nginx so that its HTTP response contains a custom header X-Served-By
 # with value of the hostname of the server Nginx is running on
+sudo apt-get update
+sudo apt-get install -y nginx
+echo "Hello World!" | sudo tee /var/www/html/index.html > /dev/null
+sudo sed -i "/listen 80 default_server;/a \
+\
+    location /redirect_me {\
+    return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4; \
+    }" /etc/nginx/sites-available/default
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html > /dev/null
+errreplacement="server_name _;\n\terror_page 404 \/404.html;\n\tlocation \/404.html {\n\t\tinternal;\n\t}"
+sudo sed -i "s/server_name _;/$errreplacement/" /etc/nginx/sites-available/default
 header="server_name _;\n\tadd_header X-Served-By \$hostname;"
 sudo sed -i "s/server_name _;/$header/" /etc/nginx/sites-available/default
 sudo service nginx restart
