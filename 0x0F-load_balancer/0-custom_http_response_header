@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Configures Nginx so that its HTTP response contains a custom header X-Served-By
+# with value of the hostname of the server Nginx is running on
+header="server_name _;\n\tadd_header X-Served-By \$hostname;"
+sudo sed -i "s/server_name _;/$header/" /etc/nginx/sites-available/default
