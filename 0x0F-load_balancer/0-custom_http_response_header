@@ -3,4 +3,4 @@
 # with value of the hostname of the server Nginx is running on
 header="server_name _;\n\tadd_header X-Served-By \$hostname;"
 sudo sed -i "s/server_name _;/$header/" /etc/nginx/sites-available/default
-sudo nginx -s reload
+sudo service nginx restart
