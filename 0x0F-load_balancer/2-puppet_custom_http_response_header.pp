@@ -1,19 +1,23 @@
-# install and setup an nginx server
-exec {'install_nginx':
-  provider => 'shell',
-  command  => 'sudo apt-get update ; sudo apt-get -y install nginx ; sudo service nginx start ;'
+# Install and config the nginx
+exec { 'update':
+  command  => 'sudo apt-get update',
+  provider => shell,
+}
+
+package { 'nginx':
+  ensure  => installed,
+  require => Exec['update'],
 }
 
 file_line { 'header':
   ensure  => present,
   path    => '/etc/nginx/sites-available/default',
-  after   => 'server_name _;',
-  line    => "add_header X-Served-By \${hostname};",
-  require => Exec['install_nginx']
+  after   => ':80 default_server;',
+  line    => "add_header X-Served-By ${hostname};",
+  require => Package['nginx'],
 }
 
-exec {'restart_nginx':
-  provider => 'shell',
-  command  => 'sudo service nginx restart ;',
-  require  => File_line['header']
+service { 'nginx':
+  ensure  => running,
+  require => File_line['header'],
 }
