@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 # Debug an nginx server by editing config files
-sed -i "s/8080/80/g" /etc/nginx/sites-enabled/default
+ln -sf /etc/nginx/sites-available/default  /etc/nginx/sites-enabled/default
 service nginx restart
