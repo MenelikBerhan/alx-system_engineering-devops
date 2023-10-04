@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
 # Debug an nginx server by editing config files
-sed -i "s/ipv6only=on//" /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
-sed -i "s/8080/80/" /etc/nginx/sites-enabled/default
+sed -i '/listen/s/8080/80/' /etc/nginx/sites-enabled/default
 service nginx restart
