@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 # Debug an nginx server by editing config files
 ln -sf /etc/nginx/sites-available/default  /etc/nginx/sites-enabled/default
-service nginx start
-kill "$(cat /var/run/nginx.pid)"
+service nginx restart
+kill "$(pgrep nginx | head -n 1)"
