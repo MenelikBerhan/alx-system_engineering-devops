@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 # Debug an nginx server by editing config files
-sed -i '/listen/s/8080/80/' /etc/nginx/sites-enabled/default
+sed -i "/listen/s/8080/80/" /etc/nginx/sites-enabled/default
