@@ -2,6 +2,6 @@
 # Configures nginx so that its running as nginx user and listening on all active IPs on port 8080
 pkill -f apache
 sed -i 's/80/8080/' /etc/nginx/sites-available/default
-sed -i '1s/^/user nginx;/' /etc/nginx/nginx.conf
+sed -i "1s/^/user nginx;/" /etc/nginx/nginx.conf
 chmod 644 /etc/nginx/nginx.conf
 sudo -u nginx nginx -c /etc/nginx/nginx.conf
