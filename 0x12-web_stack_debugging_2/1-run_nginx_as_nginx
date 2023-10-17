@@ -4,4 +4,4 @@ pkill -f apache
 sed -i 's/80/8080/' /etc/nginx/sites-available/default
 chown -R nginx:nginx /etc/nginx /var/log/nginx /run
 service nginx stop
-sudo -u nginx nginx -c /etc/nginx/nginx.conf
+sudo -u nginx nginx -c /etc/nginx/nginx.conf > /dev/null 2>&1
