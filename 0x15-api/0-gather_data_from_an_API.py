@@ -10,7 +10,7 @@ if __name__ == '__main__':
         print('Employee ID not given!')
         exit(1)
     url = 'https://jsonplaceholder.typicode.com/users/{}'.format(argv[1])
-    name = requests.get(url=url).json()['name']
+    name = requests.get(url=url).json().get('name')
     total = len(requests.get(url=url + '/todos').json())
     params = {'completed': 'true'}
     completed = requests.get(url=url + '/todos', params=params).json()
