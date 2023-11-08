@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """Module containing a function that parses the title of all hot articles,
 and prints a sorted count of given keywords"""
-import json
 import requests
 
 
@@ -11,7 +10,7 @@ def count_words(subreddit, word_list, hot_list={}, subreddit_checked=False,
     given keywords (case-insensitive, delimited by spaces). If no posts match
     or the subreddit is invalid, prints nothing."""
 
-    headers = {"User-Agent": "Menelik-Berhan"}
+    headers = {"User-Agent": "Menelik Berhan"}
     if not subreddit_checked:
         # search given subreddit
         params = {"raw_json": 1, 'query': subreddit, 'exact': True,
