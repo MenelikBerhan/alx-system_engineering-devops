@@ -35,6 +35,7 @@ def count_words(subreddit, word_list, hot_list={}, subreddit_checked=False,
             sorted_keys.sort(key=lambda x: hot_list[x], reverse=True)
             for key in sorted_keys:
                 print('{}: {}'.format(key, hot_list[key]))
+                exit(0)
 
         words = [word.lower() for word in word_list]
         for post in resp.get('children'):
@@ -47,3 +48,5 @@ def count_words(subreddit, word_list, hot_list={}, subreddit_checked=False,
 
         count_words(subreddit, word_list, hot_list, True,
                     after=resp.get('after'))
+    else:
+        return (None)
