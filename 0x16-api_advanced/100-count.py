@@ -4,56 +4,35 @@ and prints a sorted count of given keywords"""
 import requests
 
 
-def count_words(subreddit, word_list, hot_list={}, subreddit_checked=False,
-                after=None):
-    """parses the title of all hot articles, and prints a sorted count of
-    given keywords (case-insensitive, delimited by spaces). If no posts match
-    or the subreddit is invalid, prints nothing."""
+def count_words(subreddit, word_list, count=None, after=None):
+    """queries the Reddit API and returns a list of all hot titles"""
+    if count is None:
+        count = {}
 
-    headers = {"User-Agent": "Menelik Berhan"}
-    if not subreddit_checked:
-        # search given subreddit
-        params = {"raw_json": 1, 'query': subreddit, 'exact': True,
-                  'include_unadvertisable': True}
-        url = "https://www.reddit.com/api/search_subreddits.json"
-        response = requests.post(url=url, headers=headers, params=params)
-        subreddit_exists = response.status_code == 200
-    else:
-        subreddit_exists = True
+    url = f"https://www.reddit.com/r/{subreddit}/hot.json?limit=100"
+    header = {'User-agent': 'ALX project'}
+    if after:
+        url += f"&after={after}"
+    response = requests.get(url, headers=header, allow_redirects=False)
+    if response.status_code != 200:
+        return None
 
-    # if found get and print top ten posts, else print None
-    if subreddit_exists:
-        if after is None:
-            params = {'limit': 100}
-        else:
-            params = {'limit': 100, 'after': after}
-        url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
-        response = requests.get(url, headers=headers, params=params)
-        resp = response.json().get('data')
-        if not resp.get('children'):
-            # sorted_keys = list(hot_list.keys()).sort()
-            # sorted_keys.sort(key=lambda x: hot_list[x], reverse=True)
-            # for key in sorted_keys:
-            #     print('{}: {}'.format(key, hot_list[key]))
-            #     exit(0)
-            return (None)
+    data = response.json()
+    posts = data['data']['children']
 
-        words = [word.lower() for word in word_list]
-        for post in resp.get('children'):
-            title = str(post.get('data').get('title'))
-            title_list = title.lower().split()
-            for word in words:
-                word_count = title_list.count(word)
-                if word_count:
-                    hot_list[word] = hot_list.get(word, 0) + word_count
-
-        if resp.get('after'):
-            return count_words(subreddit, word_list, hot_list, True,
-                               after=resp.get('after'))
-
-        sorted_keys = list(hot_list.keys()).sort()
-        sorted_keys.sort(key=lambda x: hot_list[x], reverse=True)
-        for key in sorted_keys:
-            print('{}: {}'.format(key, hot_list[key]))
-    else:
-        return (None)
+    if not posts:
+        return count
+    for post in posts:
+        title = post['data']['title'].lower()
+        for word in word_list:
+            if word.lower() in title:
+                if word in count:
+                    count[word] += 1
+                else:
+                    count[word] = 1
+    after = data['data']['after']
+    if after:
+        return count_words(subreddit, word_list, count, after)
+    sort_count = sorted(count.items(), key=lambda x: (-x[1], x[0]))
+    for key, value in sort_count:
+        print(f"{key}: {value}")
