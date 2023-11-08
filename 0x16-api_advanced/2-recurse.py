@@ -35,6 +35,7 @@ def recurse(subreddit, hot_list=[], subreddit_checked=False, after=None):
         if resp.get('after') is None:
             return (hot_list)
         else:
-            recurse(subreddit, hot_list, True, after=resp.get('after'))
+            return (recurse(subreddit, hot_list, True,
+                            after=resp.get('after')))
     else:
         return (None)
