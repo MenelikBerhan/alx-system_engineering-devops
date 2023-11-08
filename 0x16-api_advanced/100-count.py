@@ -30,20 +30,24 @@ def count_words(subreddit, word_list, hot_list={}, subreddit_checked=False,
         url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
         response = requests.get(url, headers=headers, params=params)
         resp = response.json().get('data')
-        if not resp.get('children'):
+
+        if resp.get('children'):
+            words = [word.lower() for word in word_list]
+            for post in resp.get('children'):
+                title = str(post.get('data').get('title'))
+                title_list = title.lower().split()
+                for word in words:
+                    word_count = title_list.count(word)
+                    if word_count:
+                        hot_list[word] = hot_list.get(word, 0) + word_count
+        if not resp.get('children') or not resp.get('after'):
             sorted_keys = list(hot_list.keys()).sort()
             sorted_keys.sort(key=lambda x: hot_list[x], reverse=True)
             for key in sorted_keys:
                 print('{}: {}'.format(key, hot_list[key]))
-
-        words = [word.lower() for word in word_list]
-        for post in resp.get('children'):
-            title = str(post.get('data').get('title'))
-            title_list = title.lower().split()
-            for word in words:
-                word_count = title_list.count(word)
-                if word_count:
-                    hot_list[word] = hot_list.get(word, 0) + word_count
+                exit(0)
 
         count_words(subreddit, word_list, hot_list, True,
                     after=resp.get('after'))
+    else:
+        exit(0)
