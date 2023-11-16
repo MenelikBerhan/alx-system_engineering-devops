@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# a script that gracefull reloads gunicorn by sending
+# +a HUP(hungup) signal to master processes
+kill -HUP "$(ps -C gunicorn fch -o pid | head -n 1)"
+
+# for multiple master processes:
+# kill -HUP "$(ps -C gunicorn fc | grep -G '[^_] gunicorn' | cut -d '?' -f1)"
