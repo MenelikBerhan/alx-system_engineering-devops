@@ -4,7 +4,7 @@
 
 # sudo kill -HUP "$(ps -C gunicorn h k pid -o pid | head -n 1)"
 
-master_pids=$(ps -C gunicorn -o pid,ppid | awk 'BEGIN {ORS=" "}; $2 == 1{ print $1}')
+master_pids=$(ps -C gunicorn -o pid,pgrp | awk '$1==$2 { print $1}')
 for pid in $master_pids
 do
         kill -HUP "$pid"
