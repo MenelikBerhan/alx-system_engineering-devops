@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # a script that gracefull reloads gunicorn by sending
 # +a HUP(hungup) signal to master processes
-sudo kill -HUP "$(ps -C gunicorn h k pid -o pid | head -n 1)"
-
-# for multiple master processes:
-# kill -HUP $(ps -C gunicorn fc | grep -G '[^_] gunicorn' | cut -d '?' -f1)
+# sudo kill -HUP "$(ps -C gunicorn h k pid -o pid | head -n 1)"
+# shellcheck disable=SC2086
+pids=$(ps -C gunicorn -o pid,ppid | awk '$2 == 1{ print $1}')
+kill -HUP $pids
